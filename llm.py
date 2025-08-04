@@ -1,5 +1,5 @@
 """
-LLM client for OpenRouter API integration.
+LLM client for Google Gemini API integration.
 Handles command generation and explanation.
 """
 
@@ -18,35 +18,46 @@ except ImportError:
 
 class LLMClient:
     def __init__(self):
-        self.api_key = os.getenv("OPENROUTER_API_KEY")
+        self.api_key = os.getenv("GEMINI_API_KEY")
         if not self.api_key:
-            raise ValueError("OPENROUTER_API_KEY environment variable is required")
+            raise ValueError("GEMINI_API_KEY environment variable is required")
         
-        self.base_url = "https://openrouter.ai/api/v1"
-        self.model = os.getenv("OPENROUTER_MODEL", "anthropic/claude-3.5-sonnet")
-        self.temperature = float(os.getenv("OPENROUTER_TEMPERATURE", "0.1"))
-        self.max_tokens = int(os.getenv("OPENROUTER_MAX_TOKENS", "500"))
-        self.timeout = int(os.getenv("OPENROUTER_TIMEOUT", "30"))
+        self.base_url = "https://generativelanguage.googleapis.com/v1beta"
+        self.model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+        self.temperature = float(os.getenv("GEMINI_TEMPERATURE", "0.1"))
+        self.max_tokens = int(os.getenv("GEMINI_MAX_TOKENS", "500"))
+        self.timeout = int(os.getenv("GEMINI_TIMEOUT", "30"))
         
     def _make_request(self, messages: list) -> Optional[str]:
-        """Make a request to OpenRouter API."""
+        """Make a request to Gemini API."""
         headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://github.com/aish-shell",
-            "X-Title": "aish interactive shell"
+            "Content-Type": "application/json"
         }
         
+        # Convert messages to Gemini format
+        # For command generation, we'll send the system prompt + user query as a single message
+        if len(messages) >= 2:
+            system_msg = messages[0]["content"]
+            user_msg = messages[1]["content"]
+            combined_prompt = f"{system_msg}\n\nUser request: {user_msg}"
+        else:
+            combined_prompt = messages[0]["content"]
+        
         data = {
-            "model": self.model,
-            "messages": messages,
-            "temperature": self.temperature,
-            "max_tokens": self.max_tokens
+            "contents": [
+                {
+                    "parts": [{"text": combined_prompt}]
+                }
+            ],
+            "generationConfig": {
+                "temperature": self.temperature,
+                "maxOutputTokens": self.max_tokens
+            }
         }
         
         try:
             response = requests.post(
-                f"{self.base_url}/chat/completions",
+                f"{self.base_url}/models/{self.model}:generateContent?key={self.api_key}",
                 headers=headers,
                 json=data,
                 timeout=self.timeout
@@ -54,7 +65,7 @@ class LLMClient:
             response.raise_for_status()
             
             result = response.json()
-            return result["choices"][0]["message"]["content"].strip()
+            return result["candidates"][0]["content"]["parts"][0]["text"].strip()
             
         except requests.exceptions.RequestException as e:
             raise Exception(f"API request failed: {e}")
@@ -63,28 +74,30 @@ class LLMClient:
     
     def generate_command(self, query: str) -> str:
         """Generate a shell command from natural language query."""
-        system_prompt = """You are a helpful assistant that converts natural language requests into safe shell commands.
+        system_prompt = """You are a shell command generator. Your ONLY job is to convert natural language requests into safe shell commands.
 
-Rules:
-1. Generate ONLY the shell command, no explanations or additional text
-2. Use safe, standard Unix/Linux commands
-3. Avoid dangerous commands like rm -rf, sudo, or commands that could damage the system
-4. Prefer find, ls, grep, awk, sed, and other safe utilities
+CRITICAL RULES:
+1. Generate ONLY the shell command - no explanations, no text, no markdown
+2. Return ONLY the command that can be executed directly
+3. Use safe, standard Unix/Linux commands
+4. Avoid dangerous commands like rm -rf, sudo, or commands that could damage the system
 5. If the request is unclear or potentially dangerous, return "SAFETY_CHECK_FAILED"
 6. Keep commands simple and readable
 7. Use proper quoting for file paths with spaces
-8. For file operations, be conservative and safe
 
-Examples:
+EXAMPLES:
 - "find all PDF files" → find . -name "*.pdf"
 - "list files modified today" → find . -type f -mtime -1
 - "show disk usage" → du -sh *
 - "search for text in files" → grep -r "text" .
-- "delete all files" → SAFETY_CHECK_FAILED (too dangerous)
+- "list all files" → ls -la
 - "find large files" → find . -type f -size +100M
 - "list python files" → find . -name "*.py"
 - "show memory usage" → free -h
 - "check disk space" → df -h
+- "delete all files" → SAFETY_CHECK_FAILED
+
+IMPORTANT: Return ONLY the command, nothing else.
 
 Query: {query}"""
 

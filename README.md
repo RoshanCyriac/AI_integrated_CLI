@@ -4,7 +4,7 @@
 
 ## Features
 
-- 🤖 **AI-powered**: Uses OpenRouter API with Claude 3.5 Sonnet for intelligent command generation
+- 🤖 **AI-powered**: Uses OpenAI API with GPT-4o-mini for intelligent command generation
 - 🛡️ **Safety first**: Built-in safety checker to detect potentially dangerous commands
 - 📝 **Command logging**: All interactions are logged to `~/.aish_history.log`
 - 🎨 **Rich UI**: Beautiful terminal interface with colors and formatting
@@ -24,7 +24,7 @@
    pip install -r requirements.txt
    ```
 
-3. **Set up your OpenRouter API key:**
+3. **Set up your OpenAI API key:**
    ```bash
    # Run the setup script
    ./setup_env.sh
@@ -136,9 +136,9 @@ All interactions are automatically logged to `~/.aish_history.log` in JSON forma
 
 ## API Configuration
 
-The shell uses OpenRouter API with the following configuration:
+The shell uses OpenAI API with the following configuration:
 
-- **Model**: `anthropic/claude-3.5-sonnet`
+- **Model**: `gpt-4o-mini`
 - **Temperature**: 0.1 (for consistent command generation)
 - **Max tokens**: 500
 - **Timeout**: 30 seconds
@@ -149,13 +149,13 @@ You can customize the behavior using environment variables in your `.env` file:
 
 ```bash
 # Required
-OPENROUTER_API_KEY=your_api_key_here
+OPENAI_API_KEY=your_api_key_here
 
 # Optional
-OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
-OPENROUTER_TEMPERATURE=0.1
-OPENROUTER_MAX_TOKENS=500
-OPENROUTER_TIMEOUT=30
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_TEMPERATURE=0.1
+OPENAI_MAX_TOKENS=500
+OPENAI_TIMEOUT=30
 AISH_HISTORY_FILE=~/.aish_history.log
 AISH_DEBUG=false
 ```
@@ -195,7 +195,7 @@ This project is open source and available under the MIT License.
 
 ### Common Issues
 
-1. **API Key Error**: Make sure `OPENROUTER_API_KEY` is set correctly in `.env`
+1. **API Key Error**: Make sure `OPENAI_API_KEY` is set correctly in `.env`
 2. **Import Errors**: Install dependencies with `pip install -r requirements.txt`
 3. **Network Issues**: Check your internet connection and API endpoint accessibility
 
@@ -204,6 +204,6 @@ This project is open source and available under the MIT License.
 If you encounter issues:
 
 1. Check the command history: `cat ~/.aish_history.log`
-2. Verify your API key is set: `echo $OPENROUTER_API_KEY`
+2. Verify your API key is set: `echo $OPENAI_API_KEY`
 3. Run tests: `python test_basic.py`
 4. Check the help: `:help` in the shell 

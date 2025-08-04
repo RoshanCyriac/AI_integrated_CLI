@@ -24,10 +24,10 @@ EOF
 fi
 
 echo ""
-echo "📝 Please edit .env file and add your OpenRouter API key:"
+echo "📝 Please edit .env file and add your Google Gemini API key:"
 echo "   nano .env"
 echo ""
-echo "🔑 Get your API key from: https://openrouter.ai/"
+echo "🔑 Get your API key from: https://makersuite.google.com/app/apikey"
 echo ""
 echo "💡 After setting your API key, you can:"
 echo "   1. Start the shell: python main.py"

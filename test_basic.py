@@ -122,7 +122,7 @@ def main():
     
     print("\n🎉 All tests passed! The aish interactive shell is ready to use.")
     print("\n📝 Next steps:")
-    print("1. Set your OPENROUTER_API_KEY environment variable")
+    print("1. Set your OPENAI_API_KEY environment variable")
     print("2. Install dependencies: pip install -r requirements.txt")
     print("3. Start the shell: python main.py")
     print("4. Try: 'find all PDF files' or 'show disk usage'")
