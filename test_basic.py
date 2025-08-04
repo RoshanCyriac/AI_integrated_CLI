@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Basic test script for aish interactive shell.
+Basic test script for AI-shell interactive shell.
 Tests core functionality without requiring API key.
 """
 
@@ -99,7 +99,7 @@ def test_imports():
 
 def main():
     """Run all tests."""
-    print("🚀 Starting aish interactive shell tests...\n")
+    print("🚀 Starting AI-shell interactive shell tests...\n")
     
     # Test imports
     if not test_imports():
@@ -120,7 +120,7 @@ def main():
         print(f"❌ Executor test failed: {e}")
         sys.exit(1)
     
-    print("\n🎉 All tests passed! The aish interactive shell is ready to use.")
+    print("\n🎉 All tests passed! The AI-shell interactive shell is ready to use.")
     print("\n📝 Next steps:")
     print("1. Set your OPENAI_API_KEY environment variable")
     print("2. Install dependencies: pip install -r requirements.txt")

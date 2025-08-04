@@ -1,12 +1,12 @@
-# aish - AI-Powered Interactive Shell
+# AI-shell - AI-Powered Interactive Shell
 
-🧠 **aish** is an interactive command-line shell that accepts natural language input and suggests equivalent shell commands using an LLM. It behaves like a real terminal but with AI-powered command generation.
+🧠 **AI-shell** is an interactive command-line shell that accepts natural language input and suggests equivalent shell commands using an LLM. It behaves like a real terminal but with AI-powered command generation.
 
 ## Features
 
 - 🤖 **AI-powered**: Uses OpenAI API with GPT-4o-mini for intelligent command generation
 - 🛡️ **Safety first**: Built-in safety checker to detect potentially dangerous commands
-- 📝 **Command logging**: All interactions are logged to `~/.aish_history.log`
+- 📝 **Command logging**: All interactions are logged to `~/.ai_shell_history.log`
 - 🎨 **Rich UI**: Beautiful terminal interface with colors and formatting
 - 🔍 **Interactive**: Real-time command generation and execution
 - 📖 **Help system**: Built-in help and history commands
@@ -16,7 +16,7 @@
 1. **Clone or download the project:**
    ```bash
    git clone <repository-url>
-   cd aish
+   cd AI-shell
    ```
 
 2. **Install dependencies:**
@@ -48,7 +48,7 @@ python main.py
 
 You'll see a prompt like:
 ```
-aish> 
+AI-shell> 
 ```
 
 ### Natural Language Queries
@@ -56,7 +56,7 @@ aish>
 Type natural language descriptions of what you want to do:
 
 ```bash
-aish> find all PDF files larger than 10MB
+AI-shell> find all PDF files larger than 10MB
 💡 Suggested: find . -name "*.pdf" -size +10M
 Run this command? [y/N]: y
 📤 Executing...
@@ -77,12 +77,12 @@ Run this command? [y/N]: y
 ### Example Interactions
 
 ```bash
-aish> delete all .zip files in Downloads
+AI-shell> delete all .zip files in Downloads
 💡 Suggested: rm ~/Downloads/*.zip
 Run this command? [y/N]: n
 ❌ Cancelled
 
-aish> list all python files modified in the last 24 hours
+AI-shell> list all python files modified in the last 24 hours
 💡 Suggested: find . -name "*.py" -mtime -1
 Run this command? [y/N]: y
 📤 Executing...
@@ -97,7 +97,7 @@ Run this command? [y/N]: y
 ## Project Structure
 
 ```
-aish/
+AI-shell/
 ├── main.py          # Interactive shell loop
 ├── llm.py           # OpenRouter API integration
 ├── safety.py        # Safety checker for dangerous commands
@@ -122,7 +122,7 @@ The shell includes comprehensive safety checks for:
 
 ## Command History
 
-All interactions are automatically logged to `~/.aish_history.log` in JSON format:
+All interactions are automatically logged to `~/.ai_shell_history.log` in JSON format:
 
 ```json
 {
@@ -156,7 +156,7 @@ OPENAI_MODEL=gpt-4o-mini
 OPENAI_TEMPERATURE=0.1
 OPENAI_MAX_TOKENS=500
 OPENAI_TIMEOUT=30
-AISH_HISTORY_FILE=~/.aish_history.log
+AISH_HISTORY_FILE=~/.ai_shell_history.log
 AISH_DEBUG=false
 ```
 
@@ -203,7 +203,7 @@ This project is open source and available under the MIT License.
 
 If you encounter issues:
 
-1. Check the command history: `cat ~/.aish_history.log`
+1. Check the command history: `cat ~/.ai_shell_history.log`
 2. Verify your API key is set: `echo $OPENAI_API_KEY`
 3. Run tests: `python test_basic.py`
 4. Check the help: `:help` in the shell 

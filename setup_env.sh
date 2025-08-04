@@ -1,9 +1,9 @@
 #!/bin/bash
-# Environment setup script for aish interactive shell
+# Environment setup script for AI-shell interactive shell
 
 set -e
 
-echo "🔧 Setting up aish interactive shell environment..."
+echo "🔧 Setting up AI-shell interactive shell environment..."
 
 # Check if .env file exists
 if [ -f ".env" ]; then
@@ -18,7 +18,7 @@ if [ -f "env.example" ]; then
 else
     echo "❌ env.example not found. Creating basic .env file..."
     cat > .env << EOF
-# aish Interactive Shell Environment Variables
+# AI-shell Interactive Shell Environment Variables
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 EOF
 fi

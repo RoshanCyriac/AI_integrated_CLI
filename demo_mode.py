@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Demo mode for aish interactive shell.
+Demo mode for AI-shell interactive shell.
 Works without API calls to demonstrate functionality.
 """
 
@@ -61,7 +61,7 @@ class DemoLLMClient:
         return "echo 'Command not found in demo mode'"
 
 
-class AishDemoShell:
+class AIShellDemo:
     def __init__(self):
         self.console = Console()
         self.llm = DemoLLMClient()
@@ -71,7 +71,7 @@ class AishDemoShell:
         
     def print_banner(self):
         """Display the shell banner."""
-        banner = Text("🧠 aish - AI-Powered Interactive Shell (DEMO MODE)", style="bold blue")
+        banner = Text("🧠 AI-shell - AI-Powered Interactive Shell (DEMO MODE)", style="bold blue")
         subtitle = Text("Type natural language to get shell commands (Demo mode - no API calls)", style="dim")
         
         self.console.print(Panel(
@@ -82,8 +82,8 @@ class AishDemoShell:
         self.console.print()
         
     def get_prompt(self) -> str:
-        """Get user input with the aish prompt."""
-        return Prompt.ask("aish> ", console=self.console)
+        """Get user input with the AI-shell prompt."""
+        return Prompt.ask("AI-shell> ", console=self.console)
         
     def process_natural_language(self, user_input: str) -> Optional[str]:
         """Process natural language input and return shell command."""
@@ -235,7 +235,7 @@ class AishDemoShell:
 def main():
     """Main entry point."""
     try:
-        shell = AishDemoShell()
+        shell = AIShellDemo()
         shell.run()
     except Exception as e:
         console = Console()

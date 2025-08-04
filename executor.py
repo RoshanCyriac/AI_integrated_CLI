@@ -25,7 +25,7 @@ class CommandResult:
 class CommandExecutor:
     def __init__(self):
         # Allow custom history file path from environment
-        history_path = os.getenv("AISH_HISTORY_FILE", "~/.aish_history.log")
+        history_path = os.getenv("AISH_HISTORY_FILE", "~/.ai_shell_history.log")
         self.history_file = Path(history_path).expanduser()
         self._ensure_history_file()
     
