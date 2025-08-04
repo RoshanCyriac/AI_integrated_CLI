@@ -1,49 +1,43 @@
-# AI-shell - AI-Powered Interactive Shell
+# AI-shell CLI - AI-Powered Interactive Shell
 
-🧠 **AI-shell** is an interactive command-line shell that accepts natural language input and suggests equivalent shell commands using an LLM. It behaves like a real terminal but with AI-powered command generation.
+🧠 **AI-shell CLI** is an interactive command-line shell that accepts natural language input and suggests equivalent shell commands using an LLM. It behaves like a real terminal but with AI-powered command generation.
 
 ## Features
 
-- 🤖 **AI-powered**: Uses OpenAI API with GPT-4o-mini for intelligent command generation
+- 🤖 **AI-powered**: Uses Google Gemini API for intelligent command generation
 - 🛡️ **Safety first**: Built-in safety checker to detect potentially dangerous commands
 - 📝 **Command logging**: All interactions are logged to `~/.ai_shell_history.log`
 - 🎨 **Rich UI**: Beautiful terminal interface with colors and formatting
 - 🔍 **Interactive**: Real-time command generation and execution
 - 📖 **Help system**: Built-in help and history commands
+- 🎮 **Demo mode**: Try without API key using predefined commands
 
 ## Installation
 
-1. **Clone or download the project:**
-   ```bash
-   git clone <repository-url>
-   cd AI-shell
-   ```
+### From PyPI (Recommended)
 
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install ai-shell-cli
+```
 
-3. **Set up your OpenAI API key:**
-   ```bash
-   # Run the setup script
-   ./setup_env.sh
-   
-   # Edit the .env file with your API key
-   nano .env
-   ```
+### Quick Start
 
-4. **Start the shell:**
-   ```bash
-   python main.py
-   ```
+After installation, you can start the shell with:
+
+```bash
+# Main interactive shell (requires API key)
+ai-shell-cli
+
+# Demo mode (no API key required)
+ai-shell-demo
+```
 
 ## Usage
 
 ### Starting the Shell
 
 ```bash
-python main.py
+ai-shell-cli
 ```
 
 You'll see a prompt like:
@@ -94,18 +88,48 @@ Run this command? [y/N]: y
 ./test_basic.py
 ```
 
+## API Configuration
+
+### Setting up Google Gemini API
+
+1. **Get an API key** from [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. **Set the environment variable**:
+   ```bash
+   export GEMINI_API_KEY=your_api_key_here
+   ```
+3. **Or create a `.env` file**:
+   ```bash
+   echo "GEMINI_API_KEY=your_api_key_here" > .env
+   ```
+
+### Demo Mode (No API Required)
+
+If you don't have an API key, you can try the demo mode:
+
+```bash
+ai-shell-demo
+```
+
+Demo mode includes predefined commands like:
+- "find all pdf files"
+- "list all python files"
+- "show disk usage"
+- "check memory usage"
+- "go to downloads folder"
+
 ## Project Structure
 
 ```
-AI-shell/
-├── main.py          # Interactive shell loop
-├── llm.py           # OpenRouter API integration
-├── safety.py        # Safety checker for dangerous commands
-├── executor.py      # Command execution and logging
-├── requirements.txt # Python dependencies
-├── env.example      # Environment variables template
-├── setup_env.sh     # Environment setup script
-├── test_basic.py    # Basic functionality tests
+ai-shell-cli/
+├── ai_shell/        # Main package
+│   ├── main.py      # Interactive shell loop
+│   ├── llm.py       # Gemini API integration
+│   ├── safety.py    # Safety checker
+│   ├── executor.py  # Command execution
+│   └── demo_mode.py # Demo mode
+├── tests/           # Test files
+├── setup.py         # Package configuration
+├── pyproject.toml   # Modern packaging
 └── README.md        # This file
 ```
 
@@ -136,9 +160,9 @@ All interactions are automatically logged to `~/.ai_shell_history.log` in JSON f
 
 ## API Configuration
 
-The shell uses OpenAI API with the following configuration:
+The shell uses Google Gemini API with the following configuration:
 
-- **Model**: `gpt-4o-mini`
+- **Model**: `gemini-1.5-flash`
 - **Temperature**: 0.1 (for consistent command generation)
 - **Max tokens**: 500
 - **Timeout**: 30 seconds
@@ -149,13 +173,13 @@ You can customize the behavior using environment variables in your `.env` file:
 
 ```bash
 # Required
-OPENAI_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_api_key_here
 
 # Optional
-OPENAI_MODEL=gpt-4o-mini
-OPENAI_TEMPERATURE=0.1
-OPENAI_MAX_TOKENS=500
-OPENAI_TIMEOUT=30
+GEMINI_MODEL=gemini-1.5-flash
+GEMINI_TEMPERATURE=0.1
+GEMINI_MAX_TOKENS=500
+GEMINI_TIMEOUT=30
 AISH_HISTORY_FILE=~/.ai_shell_history.log
 AISH_DEBUG=false
 ```
@@ -165,15 +189,47 @@ AISH_DEBUG=false
 Run the basic tests to verify functionality:
 
 ```bash
-python test_basic.py
+# Install in development mode
+pip install -e .
+
+# Run tests
+python -m pytest tests/
 ```
 
 ## Error Handling
 
 - Network timeouts and API errors are handled gracefully
 - Dangerous commands trigger warnings but don't prevent execution
+- Rate limiting is handled with appropriate error messages
 - Command execution has a 5-minute timeout
 - Failed commands are logged with error details
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"GEMINI_API_KEY environment variable is required"**
+   - Set your API key: `export GEMINI_API_KEY=your_key_here`
+   - Or create a `.env` file: `echo "GEMINI_API_KEY=your_key_here" > .env`
+
+2. **"429 Too Many Requests"**
+   - You've hit the API rate limit
+   - Wait a few minutes and try again
+   - Or use demo mode: `ai-shell-demo`
+
+3. **"Command not found"**
+   - Make sure you installed the package: `pip install ai-shell-cli`
+   - Check if it's in your PATH: `which ai-shell-cli`
+
+4. **Demo mode not working**
+   - Try: `ai-shell-demo` (not `ai-shell-demo --help`)
+   - Demo mode works without any API key
+
+### Getting Help
+
+- Run `:help` inside the shell for built-in help
+- Check the command history: `cat ~/.ai_shell_history.log`
+- Verify your API key is set: `echo $GEMINI_API_KEY`
 
 ## Contributing
 

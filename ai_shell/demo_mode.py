@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-AI-shell - AI-Powered Interactive Shell
-Accepts natural language input and returns executable commands.
+Demo mode for AI-shell interactive shell.
+Works without API calls to demonstrate functionality.
 """
 
 import os
@@ -12,23 +12,67 @@ from rich.prompt import Prompt
 from rich.panel import Panel
 from rich.text import Text
 
-from .llm import LLMClient
-from .executor import CommandExecutor
 from .safety import SafetyChecker
+from .executor import CommandExecutor
 
 
-class AIShell:
+class DemoLLMClient:
+    """Demo LLM client that returns predefined commands."""
+    
+    def __init__(self):
+        self.demo_commands = {
+            "find all pdf files": "find . -name \"*.pdf\"",
+            "list all python files": "find . -name \"*.py\"",
+            "show disk usage": "du -sh *",
+            "check memory usage": "free -h",
+            "list files modified today": "find . -type f -mtime -1",
+            "find large files": "find . -type f -size +100M",
+            "search for text in files": "grep -r \"text\" .",
+            "count lines in files": "wc -l *.txt",
+            "show running processes": "ps aux",
+            "check network connections": "netstat -tuln",
+            "go to downloads folder": "cd ~/Downloads && ls -la",
+            "go to home folder": "cd ~ && ls -la",
+            "whats the current location": "pwd",
+            "show current directory": "pwd && ls -la",
+            "list all files": "ls -la",
+            "show system info": "uname -a",
+            "check disk space": "df -h",
+            "show environment variables": "env | head -20",
+            "find all zip files": "find . -name \"*.zip\"",
+            "show file permissions": "ls -la | head -10"
+        }
+    
+    def generate_command(self, query: str) -> str:
+        """Generate a command based on the query."""
+        query_lower = query.lower().strip()
+        
+        # Try to find an exact match
+        for demo_query, command in self.demo_commands.items():
+            if demo_query in query_lower or query_lower in demo_query:
+                return command
+        
+        # If no exact match, try partial matching
+        for demo_query, command in self.demo_commands.items():
+            if any(word in query_lower for word in demo_query.split()):
+                return command
+        
+        # Default fallback
+        return "echo 'Command not found in demo mode'"
+
+
+class AIShellDemo:
     def __init__(self):
         self.console = Console()
-        self.llm = LLMClient()
+        self.llm = DemoLLMClient()
         self.executor = CommandExecutor()
         self.safety = SafetyChecker()
         self.running = True
         
     def print_banner(self):
         """Display the shell banner."""
-        banner = Text("🧠 AI-shell - AI-Powered Interactive Shell", style="bold blue")
-        subtitle = Text("Type natural language to get shell commands", style="dim")
+        banner = Text("🧠 AI-shell - AI-Powered Interactive Shell (DEMO MODE)", style="bold blue")
+        subtitle = Text("Type natural language to get shell commands (Demo mode - no API calls)", style="dim")
         
         self.console.print(Panel(
             banner + "\n" + subtitle,
@@ -50,14 +94,6 @@ class AIShell:
         except Exception as e:
             self.console.print(f"❌ Error generating command: {e}", style="red")
             return None
-            
-    def explain_command(self, command: str, original_query: str) -> str:
-        """Get explanation for the generated command."""
-        try:
-            explanation = self.llm.explain_command(command, original_query)
-            return explanation
-        except Exception as e:
-            return f"Unable to generate explanation: {e}"
             
     def check_safety(self, command: str) -> tuple[bool, list[str]]:
         """Check if command is safe and return warnings."""
@@ -117,8 +153,8 @@ class AIShell:
             self.show_help()
             return True
             
-        if input_lower == ":history":
-            self.show_history()
+        if input_lower == ":demo":
+            self.show_demo_commands()
             return True
             
         if input_lower == ":clear":
@@ -134,34 +170,24 @@ class AIShell:
   • Natural language queries (e.g., "find all PDF files")
   • :quit, :exit - Exit the shell
   • :help - Show this help
-  • :history - Show command history
+  • :demo - Show available demo commands
   • :clear - Clear screen
-  • :explain - Explain the last generated command
-  • :dryrun - Preview command without executing
 
-💡 Examples:
-  • "delete all .zip files in Downloads"
-  • "list all python files modified in the last 24 hours"
-  • "show disk usage for current directory"
-  • "find all files larger than 100MB"
+💡 Demo Examples:
+  • "find all pdf files"
+  • "list all python files"
+  • "show disk usage"
+  • "check memory usage"
+  • "go to downloads folder"
+  • "whats the current location"
         """
         self.console.print(Panel(help_text, title="Help", border_style="green"))
         
-    def show_history(self):
-        """Display command history."""
-        history = self.executor.get_history(limit=10)
-        
-        if not history:
-            self.console.print("📜 No command history found.", style="dim")
-            return
-            
-        self.console.print("📜 Recent Commands:", style="bold")
-        for entry in history:
-            timestamp = entry.get('timestamp', 'Unknown')
-            query = entry.get('original_query', 'Unknown')
-            command = entry.get('generated_command', 'Unknown')
-            
-            self.console.print(f"  {timestamp}: {query} → {command}")
+    def show_demo_commands(self):
+        """Show available demo commands."""
+        self.console.print("📋 Available Demo Commands:", style="bold")
+        for query, command in self.llm.demo_commands.items():
+            self.console.print(f"  • {query} → {command}")
             
     def run(self):
         """Main shell loop."""
@@ -209,7 +235,7 @@ class AIShell:
 def main():
     """Main entry point."""
     try:
-        shell = AIShell()
+        shell = AIShellDemo()
         shell.run()
     except Exception as e:
         console = Console()
